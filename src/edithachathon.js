@@ -1,8 +1,10 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { useParams } from "react-router-dom";
 import useFetch from "./usefetch";
-
+import { getStorage, ref, uploadBytes } from "firebase/storage";
+import { initializeApp } from "firebase/app";
+import { getDownloadURL } from "firebase/storage";
 const EditHackathon = () => {
   const { id } = useParams();
   const {
@@ -12,25 +14,53 @@ const EditHackathon = () => {
   } = useFetch("http://localhost:8000/hackathons/" + id);
   const navigate = useNavigate();
 
-  const [title, setTitle] = useState(hackathons?.title);
-  const [summary, setSummary] = useState(hackathons?.summary);
-  const [description, setDescription] = useState(hackathons?.description);
+  const [title, setTitle] = useState(hackathons?.title || "");
+  const [summary, setSummary] = useState(hackathons?.summary || "");
+  const [description, setDescription] = useState(hackathons?.description || "");
   const [name, setName] = useState(hackathons?.name || "");
-  const [startdate, setStartdate] = useState(hackathons?.startdate);
-  const [enddate, setEnddate] = useState(hackathons?.enddate);
-  const [gitlink, setGitlink] = useState(hackathons?.gitlink);
-  const [otherlink, setOtherlink] = useState(hackathons?.otherlink);
-
+  const [image, setImage] = useState(hackathons?.image || "");
+  const [startdate, setStartdate] = useState(hackathons?.startdate || "");
+  const [enddate, setEnddate] = useState(hackathons?.enddate || "");
+  const [gitlink, setGitlink] = useState(hackathons?.gitlink || "");
+  const [otherlink, setOtherlink] = useState(hackathons?.otherlink || "");
+  useEffect(() => {
+    setTitle(hackathons?.title);
+    setSummary(hackathons?.summary);
+    setDescription(hackathons?.description);
+    setName(hackathons?.name);
+    setImage(hackathons?.image);
+    setStartdate(hackathons?.startdate);
+    setEnddate(hackathons?.enddate);
+    setGitlink(hackathons?.gitlink);
+    setOtherlink(hackathons?.otherlink);
+  }, [hackathons]);
+  const firebaseConfig = {
+    apiKey: "AIzaSyATqtAZ7hWppbl3WZb3-ZoWEYfdyvHdw7M",
+    authDomain: "aiplanet-6e952.firebaseapp.com",
+    projectId: "aiplanet-6e952",
+    storageBucket: "aiplanet-6e952.appspot.com",
+    messagingSenderId: "526298114045",
+    appId: "1:526298114045:web:0df6740217cfd84a52db94",
+    measurementId: "G-PW70EGQ4KB",
+  }; // your Firebase config
+  const app = initializeApp(firebaseConfig);
+  const storage = getStorage(app);
   if (!hackathons) {
     return <div>Loading...</div>;
   }
 
-  const handleUpdate = () => {
+  const handleUpdate = async (e) => {
+    e.preventDefault();
+    const storageRef = ref(storage, `images/${image.name}`);
+    await uploadBytes(storageRef, image);
+    const imageURL = await getDownloadURL(storageRef);
+
     const updatedHackathon = {
       title,
       summary,
       description,
       name,
+      image: imageURL,
       startdate,
       enddate,
       gitlink,
@@ -56,7 +86,7 @@ const EditHackathon = () => {
       <input
         type="text"
         className="titleinput"
-        value={title}
+        defaultValue={hackathons.title}
         placeholder="Title of your submission"
         onChange={(e) => setTitle(e.target.value)}
       />
@@ -64,6 +94,7 @@ const EditHackathon = () => {
       <input
         type="text"
         className="titleinput"
+        defaultValue={hackathons.summary}
         value={summary}
         onChange={(e) => setSummary(e.target.value)}
         placeholder="A short summary of your submission (this will be visible with your submission)"
@@ -72,16 +103,22 @@ const EditHackathon = () => {
       <textarea
         type="text"
         className="titledescription"
-        value={description}
+        defaultValue={hackathons.description}
         onChange={(e) => setDescription(e.target.value)}
         placeholder="Write a long description of your project. You can describe your idea and approach here."
       />
-
+      <span>Cover Image</span>
+      <input
+        type="file"
+        name="file"
+        // defaultValue={hackathons.image}
+        onChange={(e) => setImage(e.target.files[0])}
+      />
       <span className="xy">Enter the name of Hackathon</span>
       <input
         type="text"
         className="titleinput"
-        value={name}
+        defaultValue={hackathons.name}
         onChange={(e) => setName(e.target.value)}
         placeholder="Enter the name of the hackathon"
       />
@@ -93,14 +130,14 @@ const EditHackathon = () => {
           <input
             type="text"
             className="x"
-            value={startdate}
+            defaultValue={hackathons.startdate}
             onChange={(e) => setStartdate(e.target.value)}
             placeholder="Select start date"
           />
           <input
             type="text"
             className="y"
-            value={enddate}
+            defaultValue={hackathons.enddate}
             onChange={(e) => setEnddate(e.target.value)}
             placeholder="Select start date"
           />
@@ -110,7 +147,7 @@ const EditHackathon = () => {
       <input
         type="text"
         className="titleinput"
-        value={gitlink}
+        defaultValue={hackathons.gitlink}
         onChange={(e) => setGitlink(e.target.value)}
         placeholder="Enter your submission’s public GitHub repository link"
       />
@@ -118,7 +155,7 @@ const EditHackathon = () => {
       <input
         type="text"
         className="titleinput"
-        value={otherlink}
+        defaultValue={otherlink}
         onChange={(e) => setOtherlink(e.target.value)}
         placeholder="You can upload a video demo or URL of you demo app here."
       />

@@ -1,7 +1,9 @@
 import React from "react";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-
+import { getStorage, ref, uploadBytes } from "firebase/storage";
+import { initializeApp } from "firebase/app";
+import { getDownloadURL } from "firebase/storage";
 const Submission = () => {
   const [title, setTitle] = useState("");
   const [summary, setSummary] = useState("");
@@ -16,17 +18,31 @@ const Submission = () => {
   const [otherlink, setOtherlink] = useState("");
   const [ispending, setispending] = useState("false");
   const [image, setImage] = useState(null);
-
+  const firebaseConfig = {
+    apiKey: "AIzaSyATqtAZ7hWppbl3WZb3-ZoWEYfdyvHdw7M",
+    authDomain: "aiplanet-6e952.firebaseapp.com",
+    projectId: "aiplanet-6e952",
+    storageBucket: "aiplanet-6e952.appspot.com",
+    messagingSenderId: "526298114045",
+    appId: "1:526298114045:web:0df6740217cfd84a52db94",
+    measurementId: "G-PW70EGQ4KB",
+  }; // your Firebase config
+  const app = initializeApp(firebaseConfig);
+  const storage = getStorage(app);
   const navigate = useNavigate();
-  const handlesubmit = (e) => {
+  const handlesubmit = async (e) => {
     e.preventDefault();
     const postDate = new Date();
+    const storageRef = ref(storage, `images/${image.name}`);
+    await uploadBytes(storageRef, image);
+    const imageURL = await getDownloadURL(storageRef);
+
     const hackathon = {
       title,
       summary,
       description,
       name,
-      image,
+      image: imageURL,
       dayuploaded: postDate.toISOString(),
       daysAgo: Math.round(
         (Date.now() - postDate.getTime()) / (1000 * 60 * 60 * 24)
@@ -79,7 +95,11 @@ const Submission = () => {
         placeholder="Write a long description of your project. You can describe your idea and approach here."
       />
       <span>Cover Image</span>
-      <input type="file" name="file" />
+      <input
+        type="file"
+        name="file"
+        onChange={(e) => setImage(e.target.files[0])}
+      />
 
       <span className="xy">Enter the name of Hackathon</span>
       <input

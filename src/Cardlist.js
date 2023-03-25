@@ -22,8 +22,13 @@ const CardList = ({ hackathons, searchdata }) => {
           return (
             <div className="cards" key={hackathons.id}>
               <Link className="card-text" to={`/hackathons/${hackathons.id}`}>
-                <img src={img} alt="" />
-                <h2 className="card-title">{hackathons.title}</h2>
+                <span>
+                  <img id="card-image" src={hackathons.image} alt="" />
+                </span>
+                <span>
+                  {" "}
+                  <h2 className="card-title">{hackathons.title}</h2>
+                </span>
                 <p> {hackathons.summary}</p>
               </Link>
               <span>Uploaded {hackathons.daysAgo} days ago</span>

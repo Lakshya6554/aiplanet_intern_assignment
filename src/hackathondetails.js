@@ -18,7 +18,7 @@ const HackathonDetails = () => {
   const navigate = useNavigate();
   // const [favorites, setFavorites] = useState([]);
   const routeChange = () => {
-    let path = `/edit/${favourites.id}`;
+    let path = `/edit/${hackathons.id}`;
     navigate(path);
   };
   const { id } = useParams();
@@ -87,7 +87,7 @@ const HackathonDetails = () => {
           <div className="home-div">
             <div className="title3">
               <span>
-                <img src={img} className="sat" alt="" />
+                <img src={hackathons.image} className="sat" alt="" />
                 <span>
                   <h2 className="heading">{hackathons.title}</h2>
                 </span>

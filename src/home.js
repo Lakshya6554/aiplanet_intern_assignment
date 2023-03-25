@@ -5,25 +5,32 @@ import useFetch from "./usefetch";
 import CardList from "./Cardlist";
 
 const Home = () => {
-  const { data, ispending, error } = useFetch(
+  const { data, isPending, error } = useFetch(
     "http://localhost:8000/hackathons"
   );
-  console.log(data);
   const [search, setSearch] = useState("");
   const [sort, setSort] = useState("");
   const [activeButton, setActiveButton] = useState(null);
 
-  // const [data, setData] = useState(null);
-
   const handleSort = (e) => {
-    // setSort(e.target.value);
-    // if (e.target.value === "newest") {
-    //   setData([...data].sort((a, b) => new Date(b.date) - new Date(a.date)));
-    // } else if (e.target.value === "oldest") {
-    //   setData([...data].sort((a, b) => new Date(a.date) - new Date(b.date)));
-    // }
+    setSort(e.target.value);
+  };
+  console.log(sort);
+  const sortData = (hackathons) => {
+    console.log("sorting data", hackathons);
+    if (sort === "Newest") {
+      const sorted = [...hackathons].sort((a, b) => b.daysAgo - a.daysAgo);
+      console.log("sorted data", sorted);
+      return sorted;
+    } else if (sort === "Oldest") {
+      const sorted = [...hackathons].sort((a, b) => a.daysAgo - b.daysAgo);
+      console.log("sorted data", sorted);
+      return sorted;
+    }
+    return hackathons;
   };
 
+  console.log(sortData);
   return (
     <div className="container">
       <div className="home-div">
@@ -73,18 +80,18 @@ const Home = () => {
             />
           </button>
           <select value={sort} onChange={handleSort}>
-            <option value="">Sort by</option>
-            <option value="newest">Newest</option>
-            <option value="oldest">Oldest</option>
+            <option value="Newest">Newest</option>
+            <option value="Oldest">Oldest</option>
           </select>
         </span>
       </div>
-      <div>{data && <CardList hackathons={data} searchdata={search} />}</div>
-      {/* <div>
-        {data && (
-          <CardList hackathons={favouritehackathon} searchdata={search} />
-        )}
-      </div> */}
+      {error && <div>{error}</div>}
+      {isPending && <div>Loading...</div>}
+      {data && (
+        <div className="on">
+          <CardList hackathons={sortData(data)} searchdata={search} />
+        </div>
+      )}
     </div>
   );
 };

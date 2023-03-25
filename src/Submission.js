@@ -4,6 +4,7 @@ import { useNavigate } from "react-router-dom";
 import { getStorage, ref, uploadBytes } from "firebase/storage";
 import { initializeApp } from "firebase/app";
 import { getDownloadURL } from "firebase/storage";
+
 const Submission = () => {
   const [title, setTitle] = useState("");
   const [summary, setSummary] = useState("");
@@ -74,6 +75,7 @@ const Submission = () => {
         type="text"
         className="titleinput"
         value={title}
+        required
         placeholder="Title of your submission"
         onChange={(e) => setTitle(e.target.value)}
       />
@@ -82,6 +84,7 @@ const Submission = () => {
         type="text"
         className="titleinput"
         value={summary}
+        required
         onChange={(e) => setSummary(e.target.value)}
         placeholder="A short summary of your submission (this will be visible with your submission)"
       />
@@ -91,6 +94,7 @@ const Submission = () => {
         type="text"
         className="titledescription"
         value={description}
+        required
         onChange={(e) => setDescription(e.target.value)}
         placeholder="Write a long description of your project. You can describe your idea and approach here."
       />
@@ -98,6 +102,7 @@ const Submission = () => {
       <input
         type="file"
         name="file"
+        required
         onChange={(e) => setImage(e.target.files[0])}
       />
 
@@ -106,6 +111,7 @@ const Submission = () => {
         type="text"
         className="titleinput"
         value={name}
+        required
         onChange={(e) => setName(e.target.value)}
         placeholder="Enter the name of the hackathon"
       />
@@ -119,6 +125,7 @@ const Submission = () => {
             type="text"
             className="x"
             value={startdate}
+            required
             onChange={(e) => setStartdate(e.target.value)}
             placeholder="Select start date"
           />
@@ -126,8 +133,9 @@ const Submission = () => {
             type="text"
             className="y"
             value={enddate}
+            required
             onChange={(e) => setEnddate(e.target.value)}
-            placeholder="Select start date"
+            placeholder="Select end date"
           />
         </div>
       </div>
@@ -136,6 +144,7 @@ const Submission = () => {
         type="text"
         className="titleinput"
         value={gitlink}
+        required
         onChange={(e) => setGitlink(e.target.value)}
         placeholder="Enter your submission’s public GitHub repository link"
       />

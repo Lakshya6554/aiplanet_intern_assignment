@@ -86,6 +86,7 @@ const EditHackathon = () => {
       <input
         type="text"
         className="titleinput"
+        required
         defaultValue={hackathons.title}
         placeholder="Title of your submission"
         onChange={(e) => setTitle(e.target.value)}
@@ -94,6 +95,7 @@ const EditHackathon = () => {
       <input
         type="text"
         className="titleinput"
+        required
         defaultValue={hackathons.summary}
         value={summary}
         onChange={(e) => setSummary(e.target.value)}
@@ -103,6 +105,7 @@ const EditHackathon = () => {
       <textarea
         type="text"
         className="titledescription"
+        required
         defaultValue={hackathons.description}
         onChange={(e) => setDescription(e.target.value)}
         placeholder="Write a long description of your project. You can describe your idea and approach here."
@@ -110,6 +113,7 @@ const EditHackathon = () => {
       <span>Cover Image</span>
       <input
         type="file"
+        required
         name="file"
         // defaultValue={hackathons.image}
         onChange={(e) => setImage(e.target.files[0])}
@@ -118,6 +122,7 @@ const EditHackathon = () => {
       <input
         type="text"
         className="titleinput"
+        required
         defaultValue={hackathons.name}
         onChange={(e) => setName(e.target.value)}
         placeholder="Enter the name of the hackathon"
@@ -131,6 +136,7 @@ const EditHackathon = () => {
             type="text"
             className="x"
             defaultValue={hackathons.startdate}
+            required
             onChange={(e) => setStartdate(e.target.value)}
             placeholder="Select start date"
           />
@@ -138,6 +144,7 @@ const EditHackathon = () => {
             type="text"
             className="y"
             defaultValue={hackathons.enddate}
+            required
             onChange={(e) => setEnddate(e.target.value)}
             placeholder="Select start date"
           />
@@ -148,6 +155,7 @@ const EditHackathon = () => {
         type="text"
         className="titleinput"
         defaultValue={hackathons.gitlink}
+        required
         onChange={(e) => setGitlink(e.target.value)}
         placeholder="Enter your submission’s public GitHub repository link"
       />
